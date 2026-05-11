@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pro Financial & Real Estate Calculators</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #18bc9c;
+            --bg: #ecf0f1;
+            --card-bg: #ffffff;
+            --text: #333333;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            width: 100%;
+            max-width: 1000px;
+        }
+        .card {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border-top: 5px solid var(--secondary);
+        }
+        .card h2 {
+            margin-top: 0;
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+        label {
+            font-weight: bold;
+            font-size: 0.9rem;
+            display: block;
+            margin-top: 15px;
+            color: #555;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 1rem;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 20px;
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        button:hover {
+            background-color: #128f76;
+        }
+        .result-box {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e8f8f5;
+            border-left: 4px solid var(--secondary);
+            border-radius: 4px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Expert Calculators</h1>
+    
+    <div class="grid-container">
+        
+        <!-- EMI Calculator -->
+        <div class="card">
+            <h2>Loan EMI Calculator</h2>
+            <label>Loan Amount (₹)</label>
+            <input type="number" id="emiAmount" placeholder="e.g., 5000000">
+            
+            <label>Annual Interest Rate (%)</label>
+            <input type="number" id="emiRate" placeholder="e.g., 8.5" step="0.1">
+            
+            <label>Loan Tenure (Years)</label>
+            <input type="number" id="emiYears" placeholder="e.g., 20">
+            
+            <button onclick="calculateEMI()">Calculate EMI</button>
+            <div id="emiResult" class="result-box"></div>
+        </div>
+
+        <!-- SIP Calculator -->
+        <div class="card">
+            <h2>SIP Wealth Calculator</h2>
+            <label>Monthly Investment (₹)</label>
+            <input type="number" id="sipAmount" placeholder="e.g., 5000">
+            
+            <label>Expected Return Rate (p.a. %)</label>
+            <input type="number" id="sipRate" placeholder="e.g., 12" step="0.1">
+            
+            <label>Time Period (Years)</label>
+            <input type="number" id="sipYears" placeholder="e.g., 15">
+            
+            <button onclick="calculateSIP()">Calculate Wealth</button>
+            <div id="sipResult" class="result-box"></div>
+        </div>
+
+        <!-- Area Converter -->
+        <div class="card">
+            <h2>Real Estate Area Converter</h2>
+            <label>Enter Area in Square Feet</label>
+            <input type="number" id="areaSqft" placeholder="e.g., 2400">
+            
+            <button onclick="convertArea()">Convert</button>
+            <div id="areaResult" class="result-box"></div>
+        </div>
+
+    </div>
+
+    <script>
+        function formatCurrency(num) {
+            return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(num);
+        }
+
+        function calculateEMI() {
+            let p = parseFloat(document.getElementById('emiAmount').value);
+            let r = parseFloat(document.getElementById('emiRate').value) / 12 / 100;
+            let n = parseFloat(document.getElementById('emiYears').value) * 12;
+            
+            if(!p || !r || !n) return alert("Please enter all EMI values.");
+
+            let emi = p * r * Math.pow(1 + r, n) / (Math.pow(1 + r, n) - 1);
+            let totalAmount = emi * n;
+            let totalInterest = totalAmount - p;
+
+            let resBox = document.getElementById('emiResult');
+            resBox.style.display = "block";
+            resBox.innerHTML = `Monthly EMI: ${formatCurrency(emi)}<br>Total Interest: ${formatCurrency(totalInterest)}`;
+        }
+
+        function calculateSIP() {
+            let p = parseFloat(document.getElementById('sipAmount').value);
+            let r = parseFloat(document.getElementById('sipRate').value) / 12 / 100;
+            let n = parseFloat(document.getElementById('sipYears').value) * 12;
+            
+            if(!p || !r || !n) return alert("Please enter all SIP values.");
+
+            let fv = p * ((Math.pow(1 + r, n) - 1) / r) * (1 + r);
+            let invested = p * n;
+
+            let resBox = document.getElementById('sipResult');
+            resBox.style.display = "block";
+            resBox.innerHTML = `Invested: ${formatCurrency(invested)}<br>Est. Returns: ${formatCurrency(fv - invested)}<br>Total Value: ${formatCurrency(fv)}`;
+        }
+
+        function convertArea() {
+            let sqft = parseFloat(document.getElementById('areaSqft').value);
+            if(!sqft) return alert("Please enter Square Feet.");
+
+            let acres = (sqft / 43560).toFixed(4);
+            let sqmeters = (sqft / 10.764).toFixed(2);
+            let guntas = (sqft / 1089).toFixed(2);
+
+            let resBox = document.getElementById('areaResult');
+            resBox.style.display = "block";
+            resBox.innerHTML = `${acres} Acres<br>${sqmeters} Sq. Meters<br>${guntas} Guntas`;
+        }
+    </script>
+</body>
+</html>
