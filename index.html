@@ -87,11 +87,12 @@
         .highlight { color: #c0392b; font-weight: bold; }
         .success { color: #27ae60; font-weight: bold; }
         
-        /* Table Styles for Amortization */
         table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 14px; }
         th, td { border: 1px solid var(--border); padding: 10px; text-align: right; }
         th { background-color: var(--nav-bg); color: white; text-align: center; }
         tr:nth-child(even) { background-color: #f9f9f9; }
+        
+        .seo-text { margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border); font-size: 14px; color: #555; line-height: 1.6; }
     </style>
 </head>
 <body>
@@ -152,6 +153,12 @@
                     <tbody></tbody>
                 </table>
             </div>
+
+            <div class="seo-text">
+                <h3>How to Use the Advanced EMI & Prepayment Calculator</h3>
+                <p>Managing a home loan or personal loan efficiently requires more than just knowing your monthly installment. Our <strong>free EMI calculator</strong> helps you determine your exact monthly outflow based on current interest rates from top institutions like SBI, HDFC, and Five-Star Business Finance.</p>
+                <p><strong>Why calculate prepayment?</strong> The true power of this tool lies in the <strong>prepayment calculator</strong>. By making a lump-sum part-payment, you drastically reduce your principal balance. The calculator instantly shows how many years you shave off your loan tenure and the exact amount of interest saved. Use the dynamically generated <strong>amortization schedule</strong> to track your month-by-month principal versus interest ratio to optimize your financial planning.</p>
+            </div>
         </div>
 
         <div id="finance" class="tab-content">
@@ -169,6 +176,12 @@
                     <button class="calc-btn" onclick="calcIntrinsic()">Calculate Intrinsic Value</button>
                     <div id="ivResult" class="result-panel" style="display:none;"></div>
                 </div>
+            </div>
+
+            <div class="seo-text">
+                <h3>Understanding the Intrinsic Value (DCF) Calculator</h3>
+                <p>Value investing relies on finding stocks trading below their true worth. Our <strong>Intrinsic Value Calculator</strong> uses the Reverse Discounted Cash Flow (DCF) method to estimate a company's fair value based on its Earnings Per Share (EPS) and projected growth rate.</p>
+                <p>By inputting your required rate of return (discount rate), this tool projects future corporate cash flows and discounts them back to today's value. If the calculated intrinsic value is significantly higher than the current stock price on the NSE or BSE, it indicates a potentially undervalued opportunity. This is an essential tool for long-term equity analysts and portfolio builders looking to maximize their Compound Annual Growth Rate (CAGR).</p>
             </div>
         </div>
 
@@ -197,6 +210,12 @@
                     <div id="riskResult" class="result-panel" style="display:none;"></div>
                 </div>
             </div>
+
+            <div class="seo-text">
+                <h3>F&O Breakeven & Scalper Risk Management Tool</h3>
+                <p>For daily scalpers and derivatives traders, protecting trading capital is priority number one. Our <strong>Options Breakeven Calculator</strong> allows you to input your Call (CE) or Put (PE) strike price and the premium paid to instantly find the exact index or stock level required to turn a profit.</p>
+                <p>Furthermore, use the <strong>Position Sizing & Risk Calculator</strong> to enforce strict risk management rules. Whether you are taking positions in Nifty, BankNifty, or high-liquidity stocks like TATASTEEL and HAL, entering your total capital and stop-loss ensures you never risk more than your predefined limit (e.g., 2%) on a single trade. This is crucial for surviving 30-day trading challenges and growing your capital consistently.</p>
+            </div>
         </div>
 
         <div id="realestate" class="tab-content">
@@ -213,6 +232,12 @@
             </div>
             <button class="calc-btn" onclick="calcArea()">Convert All</button>
             <div id="areaResult" class="result-panel" style="display:none;"></div>
+
+            <div class="seo-text">
+                <h3>Comprehensive Land Area Converter</h3>
+                <p>Real estate transactions and property audits in India involve multiple regional measurement units. This <strong>advanced land area converter</strong> instantly translates your property dimensions between standard global units and local metrics. Easily convert square feet to acres, square meters, or guntas with precise decimal accuracy.</p>
+                <p>Whether you are auditing commercial property assets, reviewing wholesale warehouse dimensions, or assessing land registries, this tool ensures rapid, error-free conversions for seamless real estate valuation and documentation.</p>
+            </div>
         </div>
     </div>
 
@@ -255,7 +280,6 @@
             
             res.innerHTML = `Standard EMI: <b>${fmtCur(emi)}</b><br>Standard Interest: ${fmtCur((emi*n)-p)} ${prepayMsg}`;
 
-            // Generate Amortization Schedule (Max 60 months to prevent browser lag)
             let tbody = document.querySelector('#amortTable tbody');
             tbody.innerHTML = '';
             let balance = p;
