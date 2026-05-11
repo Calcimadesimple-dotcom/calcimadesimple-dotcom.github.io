@@ -7,10 +7,11 @@
     <style>
         :root {
             --bg-color: #f4f7fa;
-            --nav-bg: #1e2b3c;
-            --accent: #3498db;
+            --nav-bg: #1a252f;
+            --accent: #27ae60;
             --text-dark: #333;
             --card-bg: #fff;
+            --border: #ddd;
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -38,7 +39,7 @@
             padding: 10px 20px;
             margin: 5px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 15px;
             font-weight: bold;
             border-radius: 4px;
             transition: background 0.3s;
@@ -47,7 +48,7 @@
             background: var(--accent);
         }
         .container {
-            max-width: 900px;
+            max-width: 1000px;
             margin: 30px auto;
             padding: 20px;
         }
@@ -61,138 +62,146 @@
         .tab-content.active {
             display: block;
         }
-        .form-group {
-            margin-bottom: 15px;
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
         }
-        label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 5px;
-            color: #444;
-        }
+        @media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-weight: 600; margin-bottom: 5px; color: #444; }
         input, select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-            font-size: 16px;
+            width: 100%; padding: 10px; border: 1px solid var(--border);
+            border-radius: 4px; box-sizing: border-box; font-size: 16px;
         }
         button.calc-btn {
-            background-color: var(--accent);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            width: 100%;
-            font-size: 16px;
-            font-weight: bold;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-top: 10px;
+            background-color: var(--accent); color: white; border: none;
+            padding: 12px 20px; width: 100%; font-size: 16px; font-weight: bold;
+            border-radius: 4px; cursor: pointer; margin-top: 10px; transition: 0.3s;
         }
-        button.calc-btn:hover {
-            background-color: #2980b9;
-        }
+        button.calc-btn:hover { background-color: #219653; }
         .result-panel {
-            margin-top: 20px;
-            padding: 15px;
-            background: #eaf2f8;
-            border-left: 5px solid var(--accent);
-            font-size: 18px;
+            margin-top: 20px; padding: 15px; background: #eaf8f1;
+            border-left: 5px solid var(--accent); font-size: 16px; line-height: 1.5;
         }
-        .highlight { color: #d35400; font-weight: bold; }
+        .highlight { color: #c0392b; font-weight: bold; }
+        .success { color: #27ae60; font-weight: bold; }
+        
+        /* Table Styles for Amortization */
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 14px; }
+        th, td { border: 1px solid var(--border); padding: 10px; text-align: right; }
+        th { background-color: var(--nav-bg); color: white; text-align: center; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
     </style>
 </head>
 <body>
 
     <div class="header">
         <h1>Pro Financial Calculators</h1>
-        <p>Advanced Tools for Loans, Finance, Trading & Real Estate</p>
+        <p>Advanced Tools for Auditing, F&O Trading, Loans & Real Estate</p>
     </div>
 
     <div class="tabs">
-        <button class="tab-btn active" onclick="openTab('loan')">Loans & Prepayment</button>
-        <button class="tab-btn" onclick="openTab('finance')">Corporate Finance</button>
-        <button class="tab-btn" onclick="openTab('portfolio')">Stock Portfolio</button>
+        <button class="tab-btn active" onclick="openTab('loan')">Loans & Amortization</button>
+        <button class="tab-btn" onclick="openTab('finance')">Intrinsic Value (DCF)</button>
+        <button class="tab-btn" onclick="openTab('options')">F&O / Scalping</button>
         <button class="tab-btn" onclick="openTab('realestate')">Real Estate Area</button>
     </div>
 
     <div class="container">
+        
         <div id="loan" class="tab-content active">
-            <h2>Advanced EMI & Prepayment Calculator</h2>
-            <div class="form-group">
-                <label>Select Bank / Rate Preset</label>
-                <select id="bankSelect" onchange="updateRate()">
-                    <option value="8.5">SBI Home Loan (~8.5%)</option>
-                    <option value="8.7">HDFC Home Loan (~8.7%)</option>
-                    <option value="12.5">Five-Star Business Finance (~12.5%)</option>
-                    <option value="10.5">Standard Personal Loan (~10.5%)</option>
-                    <option value="custom">Custom Rate...</option>
-                </select>
+            <h2>Advanced EMI & Amortization Schedule</h2>
+            <div class="grid-2">
+                <div>
+                    <div class="form-group">
+                        <label>Select Bank Preset</label>
+                        <select id="bankSelect" onchange="updateRate()">
+                            <option value="8.5">SBI Home Loan (~8.5%)</option>
+                            <option value="8.7">HDFC Home Loan (~8.7%)</option>
+                            <option value="12.5">Five-Star Business Finance (~12.5%)</option>
+                            <option value="custom">Custom Rate...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Loan Amount (₹)</label>
+                        <input type="number" id="loanAmount" value="5000000">
+                    </div>
+                    <div class="form-group">
+                        <label>Interest Rate (%)</label>
+                        <input type="number" id="loanRate" value="8.5" step="0.1">
+                    </div>
+                    <div class="form-group">
+                        <label>Tenure (Years)</label>
+                        <input type="number" id="loanTenure" value="20">
+                    </div>
+                </div>
+                <div>
+                    <div class="form-group">
+                        <label>One-time Prepayment (₹) [Optional]</label>
+                        <input type="number" id="prepayment" value="0" placeholder="e.g. 500000">
+                    </div>
+                    <button class="calc-btn" onclick="calcLoan()">Calculate Impact</button>
+                    <div id="loanResult" class="result-panel" style="display:none;"></div>
+                </div>
             </div>
-            <div class="form-group">
-                <label>Loan Amount (₹)</label>
-                <input type="number" id="loanAmount" value="5000000">
+            <div id="scheduleContainer" style="display:none; overflow-x: auto;">
+                <h3 style="margin-top: 30px;">Amortization Schedule (First 60 Months)</h3>
+                <table id="amortTable">
+                    <thead><tr><th>Month</th><th>Opening Bal</th><th>EMI</th><th>Principal</th><th>Interest</th><th>Closing Bal</th></tr></thead>
+                    <tbody></tbody>
+                </table>
             </div>
-            <div class="form-group">
-                <label>Interest Rate (%)</label>
-                <input type="number" id="loanRate" value="8.5" step="0.1">
-            </div>
-            <div class="form-group">
-                <label>Tenure (Years)</label>
-                <input type="number" id="loanTenure" value="20">
-            </div>
-            <div class="form-group">
-                <label>One-time Prepayment Amount (₹) [Optional]</label>
-                <input type="number" id="prepayment" value="0" placeholder="Enter amount to pay off early">
-            </div>
-            <button class="calc-btn" onclick="calcLoan()">Calculate Impact</button>
-            <div id="loanResult" class="result-panel" style="display:none;"></div>
         </div>
 
         <div id="finance" class="tab-content">
-            <h2>Discounting / Present Value Calculator</h2>
-            <p style="font-size: 14px; color: #666;">Calculate the current worth of a future sum of money given a specified rate of return.</p>
-            <div class="form-group">
-                <label>Future Value (₹)</label>
-                <input type="number" id="fv" placeholder="Expected future amount">
+            <h2>Intrinsic Value Calculator (Reverse DCF)</h2>
+            <p style="font-size: 14px; color: #666;">Estimate the true value of a stock based on its future cash flows. Great for finding undervalued companies.</p>
+            <div class="grid-2">
+                <div>
+                    <div class="form-group"><label>Current EPS (Earnings Per Share) ₹</label><input type="number" id="eps" placeholder="e.g., 45.5"></div>
+                    <div class="form-group"><label>Expected Growth Rate (%)</label><input type="number" id="growthRate" placeholder="e.g., 12"></div>
+                    <div class="form-group"><label>Years of Growth</label><input type="number" id="growthYears" value="5"></div>
+                </div>
+                <div>
+                    <div class="form-group"><label>Discount Rate (Required Return %) </label><input type="number" id="discountRate" value="10"></div>
+                    <div class="form-group"><label>Terminal Value Multiple</label><input type="number" id="terminalMulti" value="15" title="Expected P/E ratio after growth period"></div>
+                    <button class="calc-btn" onclick="calcIntrinsic()">Calculate Intrinsic Value</button>
+                    <div id="ivResult" class="result-panel" style="display:none;"></div>
+                </div>
             </div>
-            <div class="form-group">
-                <label>Discount Rate (%)</label>
-                <input type="number" id="discountRate" placeholder="e.g., 10">
-            </div>
-            <div class="form-group">
-                <label>Number of Years</label>
-                <input type="number" id="pvYears" placeholder="e.g., 5">
-            </div>
-            <button class="calc-btn" onclick="calcPV()">Calculate Present Value</button>
-            <div id="pvResult" class="result-panel" style="display:none;"></div>
         </div>
 
-        <div id="portfolio" class="tab-content">
-            <h2>Portfolio CAGR Calculator</h2>
-            <div class="form-group">
-                <label>Initial Investment (₹)</label>
-                <input type="number" id="startVal" placeholder="e.g., 100000">
+        <div id="options" class="tab-content">
+            <h2>F&O Scalping & Risk Calculator</h2>
+            <div class="grid-2">
+                <div style="border-right: 1px solid #ddd; padding-right: 20px;">
+                    <h3>Options Breakeven</h3>
+                    <div class="form-group">
+                        <label>Option Type</label>
+                        <select id="optType"><option value="call">Call (CE)</option><option value="put">Put (PE)</option></select>
+                    </div>
+                    <div class="form-group"><label>Strike Price (₹)</label><input type="number" id="strike" placeholder="e.g., 22000 (Nifty) or 150 (TATASTEEL)"></div>
+                    <div class="form-group"><label>Premium Paid (₹)</label><input type="number" id="premium" placeholder="e.g., 120"></div>
+                    <div class="form-group"><label>Lot Size</label><input type="number" id="lotSize" value="50"></div>
+                    <button class="calc-btn" onclick="calcOption()">Calculate Trade</button>
+                    <div id="optResult" class="result-panel" style="display:none;"></div>
+                </div>
+                
+                <div style="padding-left: 20px;">
+                    <h3>Scalper's Risk Management</h3>
+                    <div class="form-group"><label>Total Trading Capital (₹)</label><input type="number" id="capital" placeholder="e.g., 200000"></div>
+                    <div class="form-group"><label>Max Risk Per Trade (%)</label><input type="number" id="riskPct" value="2" step="0.5"></div>
+                    <div class="form-group"><label>Stop Loss (Points/₹ per share)</label><input type="number" id="stopLoss" placeholder="e.g., 10"></div>
+                    <button class="calc-btn" style="background-color: #34495e;" onclick="calcRisk()">Calculate Position Size</button>
+                    <div id="riskResult" class="result-panel" style="display:none;"></div>
+                </div>
             </div>
-            <div class="form-group">
-                <label>Final Value (₹)</label>
-                <input type="number" id="endVal" placeholder="e.g., 250000">
-            </div>
-            <div class="form-group">
-                <label>Time Invested (Years)</label>
-                <input type="number" id="cagrYears" placeholder="e.g., 3">
-            </div>
-            <button class="calc-btn" onclick="calcCAGR()">Calculate Growth Rate</button>
-            <div id="cagrResult" class="result-panel" style="display:none;"></div>
         </div>
 
         <div id="realestate" class="tab-content">
             <h2>Advanced Land Area Converter</h2>
-            <div class="form-group">
-                <label>Enter Area</label>
-                <input type="number" id="areaInput" placeholder="Enter value">
-            </div>
+            <div class="form-group"><label>Enter Area</label><input type="number" id="areaInput" placeholder="Enter value"></div>
             <div class="form-group">
                 <label>From Unit</label>
                 <select id="unitSelect">
@@ -200,7 +209,6 @@
                     <option value="sqmeter">Square Meters</option>
                     <option value="acre">Acres</option>
                     <option value="gunta">Guntas</option>
-                    <option value="hectare">Hectares</option>
                 </select>
             </div>
             <button class="calc-btn" onclick="calcArea()">Convert All</button>
@@ -209,10 +217,9 @@
     </div>
 
     <script>
-        // Formatting helper
-        const fmt = (num) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(num);
+        const fmt = (num) => new Intl.NumberFormat('en-IN', { maximumFractionDigits: 2 }).format(num);
+        const fmtCur = (num) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(num);
 
-        // Tab Switching Logic
         function openTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
@@ -220,12 +227,10 @@
             event.currentTarget.classList.add('active');
         }
 
-        // Loan Calculator Logic
+        // --- LOAN LOGIC ---
         function updateRate() {
             let select = document.getElementById('bankSelect').value;
-            if (select !== "custom") {
-                document.getElementById('loanRate').value = select;
-            }
+            if (select !== "custom") document.getElementById('loanRate').value = select;
         }
 
         function calcLoan() {
@@ -236,86 +241,120 @@
 
             if(!p || !r || !n) return;
 
-            // Standard EMI
             let emi = p * r * Math.pow(1 + r, n) / (Math.pow(1 + r, n) - 1);
-            let totalInterestNormal = (emi * n) - p;
-
-            // Prepayment Logic (assuming paid immediately after month 1 for simplicity of overall impact)
-            let newPrincipal = p - prepay;
-            let newTotalInterest = 0;
-            let interestSaved = 0;
-            let prepayHtml = "";
-
-            if (prepay > 0 && prepay < p) {
-                // Keep EMI same, calculate new tenure
-                let newMonths = Math.log(emi / (emi - newPrincipal * r)) / Math.log(1 + r);
-                newTotalInterest = (emi * newMonths) - newPrincipal;
-                interestSaved = totalInterestNormal - newTotalInterest;
-                
-                prepayHtml = `<br><br><b>With Prepayment of ${fmt(prepay)}:</b><br>
-                              New Est. Tenure: <b>${(newMonths/12).toFixed(1)} Years</b> (Saved ${(n/12 - newMonths/12).toFixed(1)} yrs)<br>
-                              Total Interest Saved: <span class="highlight">${fmt(interestSaved)}</span>`;
-            }
-
             let res = document.getElementById('loanResult');
             res.style.display = "block";
-            res.innerHTML = `Standard Monthly EMI: <b>${fmt(emi)}</b><br>
-                             Standard Total Interest: ${fmt(totalInterestNormal)}
-                             ${prepayHtml}`;
+            
+            let prepayMsg = "";
+            if(prepay > 0) {
+                let newPrincipal = p - prepay;
+                let newMonths = Math.log(emi / (emi - newPrincipal * r)) / Math.log(1 + r);
+                let saved = ((emi * n) - p) - ((emi * newMonths) - newPrincipal);
+                prepayMsg = `<br><br><span class="success">With Prepayment:</span><br>Time Saved: ${(n/12 - newMonths/12).toFixed(1)} Years<br>Interest Saved: ${fmtCur(saved)}`;
+            }
+            
+            res.innerHTML = `Standard EMI: <b>${fmtCur(emi)}</b><br>Standard Interest: ${fmtCur((emi*n)-p)} ${prepayMsg}`;
+
+            // Generate Amortization Schedule (Max 60 months to prevent browser lag)
+            let tbody = document.querySelector('#amortTable tbody');
+            tbody.innerHTML = '';
+            let balance = p;
+            let scheduleLimit = Math.min(n, 60);
+
+            for(let i = 1; i <= scheduleLimit; i++) {
+                let interest = balance * r;
+                let principal = emi - interest;
+                let closing = balance - principal;
+                
+                let row = `<tr><td>${i}</td><td>${fmt(balance)}</td><td>${fmt(emi)}</td><td>${fmt(principal)}</td><td>${fmt(interest)}</td><td>${fmt(closing)}</td></tr>`;
+                tbody.innerHTML += row;
+                balance = closing;
+            }
+            document.getElementById('scheduleContainer').style.display = "block";
         }
 
-        // PV / Discounting Logic
-        function calcPV() {
-            let fv = parseFloat(document.getElementById('fv').value);
-            let r = parseFloat(document.getElementById('discountRate').value) / 100;
-            let n = parseFloat(document.getElementById('pvYears').value);
+        // --- INTRINSIC VALUE LOGIC ---
+        function calcIntrinsic() {
+            let eps = parseFloat(document.getElementById('eps').value);
+            let g = parseFloat(document.getElementById('growthRate').value) / 100;
+            let n = parseFloat(document.getElementById('growthYears').value);
+            let d = parseFloat(document.getElementById('discountRate').value) / 100;
+            let tvM = parseFloat(document.getElementById('terminalMulti').value);
 
-            if(!fv || !r || !n) return;
+            if(!eps || !g || !n || !d || !tvM) return;
 
-            let pv = fv / Math.pow((1 + r), n);
-            let res = document.getElementById('pvResult');
+            let presentValueCF = 0;
+            let futureEps = eps;
+
+            for(let i = 1; i <= n; i++) {
+                futureEps *= (1 + g);
+                presentValueCF += futureEps / Math.pow((1 + d), i);
+            }
+
+            let terminalValue = futureEps * tvM;
+            let pvTerminal = terminalValue / Math.pow((1 + d), n);
+            let intrinsicValue = presentValueCF + pvTerminal;
+
+            let res = document.getElementById('ivResult');
             res.style.display = "block";
-            res.innerHTML = `Present Value (PV): <span class="highlight">${fmt(pv)}</span>`;
+            res.innerHTML = `Estimated Intrinsic Value: <span class="success">₹${fmt(intrinsicValue)} per share</span><br>
+                             <small>If current price is below this, stock may be undervalued.</small>`;
         }
 
-        // CAGR Logic
-        function calcCAGR() {
-            let start = parseFloat(document.getElementById('startVal').value);
-            let end = parseFloat(document.getElementById('endVal').value);
-            let years = parseFloat(document.getElementById('cagrYears').value);
+        // --- OPTIONS & RISK LOGIC ---
+        function calcOption() {
+            let type = document.getElementById('optType').value;
+            let strike = parseFloat(document.getElementById('strike').value);
+            let prem = parseFloat(document.getElementById('premium').value);
+            let lot = parseFloat(document.getElementById('lotSize').value);
 
-            if(!start || !end || !years) return;
+            if(!strike || !prem || !lot) return;
 
-            let cagr = (Math.pow((end / start), (1 / years)) - 1) * 100;
-            let res = document.getElementById('cagrResult');
+            let maxLoss = prem * lot;
+            let breakeven = type === 'call' ? strike + prem : strike - prem;
+
+            let res = document.getElementById('optResult');
             res.style.display = "block";
-            res.innerHTML = `CAGR: <span class="highlight">${cagr.toFixed(2)}%</span><br>
-                             Absolute Return: ${(((end-start)/start)*100).toFixed(2)}%`;
+            res.innerHTML = `Breakeven Point: <span class="highlight">₹${breakeven.toFixed(2)}</span><br>
+                             Capital Required (Max Risk): ₹${fmt(maxLoss)}<br>
+                             Max Profit: <span class="success">Unlimited</span>`;
         }
 
-        // Real Estate Logic
+        function calcRisk() {
+            let cap = parseFloat(document.getElementById('capital').value);
+            let riskP = parseFloat(document.getElementById('riskPct').value) / 100;
+            let sl = parseFloat(document.getElementById('stopLoss').value);
+
+            if(!cap || !riskP || !sl) return;
+
+            let maxRiskAmt = cap * riskP;
+            let positionSize = maxRiskAmt / sl;
+
+            let res = document.getElementById('riskResult');
+            res.style.display = "block";
+            res.innerHTML = `Max Risk Amount: <span class="highlight">₹${fmt(maxRiskAmt)}</span><br>
+                             Recommended Position Size: <b>${Math.floor(positionSize)} Qty</b><br>
+                             <small>Strictly adhere to SL to protect capital.</small>`;
+        }
+
+        // --- REAL ESTATE LOGIC ---
         function calcArea() {
             let val = parseFloat(document.getElementById('areaInput').value);
             let unit = document.getElementById('unitSelect').value;
             if(!val) return;
 
             let sqft = 0;
-            // Convert everything to SqFt first
             if(unit === 'sqft') sqft = val;
             if(unit === 'sqmeter') sqft = val * 10.7639;
             if(unit === 'acre') sqft = val * 43560;
             if(unit === 'gunta') sqft = val * 1089;
-            if(unit === 'hectare') sqft = val * 107639;
 
             let res = document.getElementById('areaResult');
             res.style.display = "block";
-            res.innerHTML = `<b>Equivalents:</b><br>
-                             Square Feet: ${sqft.toFixed(2)}<br>
-                             Square Meters: ${(sqft / 10.7639).toFixed(2)}<br>
-                             Square Yards: ${(sqft / 9).toFixed(2)}<br>
-                             Guntas: ${(sqft / 1089).toFixed(2)}<br>
-                             Acres: ${(sqft / 43560).toFixed(4)}<br>
-                             Hectares: ${(sqft / 107639).toFixed(4)}`;
+            res.innerHTML = `Square Feet: ${fmt(sqft)}<br>
+                             Square Meters: ${fmt(sqft / 10.7639)}<br>
+                             Guntas: ${fmt(sqft / 1089)}<br>
+                             Acres: ${(sqft / 43560).toFixed(4)}`;
         }
     </script>
 </body>
